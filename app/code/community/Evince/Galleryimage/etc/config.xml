@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Evince_Galleryimage>
+      <version>1.0.0</version>
+    </Evince_Galleryimage>
+  </modules>
+  <frontend>
+    <routers>
+      <galleryimage>
+        <use>standard</use>
+          <args>
+            <module>Evince_Galleryimage</module>
+            <frontName>galleryimage</frontName>
+          </args>
+      </galleryimage>
+    </routers>
+		<layout>
+		  <updates>
+			<galleryimage>
+			  <file>galleryimage.xml</file>
+			</galleryimage>
+		  </updates>
+		</layout>
+  </frontend>
+  <global>
+    <helpers>
+      <galleryimage>
+        <class>Evince_Galleryimage_Helper</class>
+      </galleryimage>
+    </helpers>
+	<blocks>
+	  <galleryimage>
+		<class>Evince_Galleryimage_Block</class>
+	  </galleryimage>
+	</blocks>
+	<models>
+	  <galleryimage>
+		<class>Evince_Galleryimage_Model</class>
+		<resourceModel>galleryimage_mysql4</resourceModel>
+	  </galleryimage>
+	  <galleryimage_mysql4>
+		<class>Evince_Galleryimage_Model_Mysql4</class>
+		<entities>		  
+			  <galleryimage>
+				<table>evincegalleryimage</table>
+			  </galleryimage>
+        </entities>
+	  </galleryimage_mysql4>
+	</models>
+	<resources>
+	  <galleryimage_setup>
+		<setup>
+		  <module>Evince_Galleryimage</module>
+		</setup>
+		<connection>
+		  <use>core_setup</use>
+		</connection>
+	  </galleryimage_setup>
+	  <galleryimage_write>
+		<connection>
+		  <use>core_write</use>
+		</connection>
+	  </galleryimage_write>
+	  <galleryimage_read>
+		<connection>
+		  <use>core_read</use>
+		</connection>
+	  </galleryimage_read>
+	</resources>
+  </global>
+  <admin>
+	<routers>
+	  <galleryimage>
+	    <use>admin</use>
+		<args>
+		  <module>Evince_Galleryimage</module>
+		  <frontName>galleryimage</frontName>
+		</args>
+	  </galleryimage>
+	</routers>
+  </admin>
+  <adminhtml>
+	<menu>
+	  <galleryimage module="galleryimage">
+		<title>Gallery image</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <galleryimage module="galleryimage">
+		    <title>Manage Galleryimage</title>
+			<sort_order>0</sort_order>
+			<action>galleryimage/adminhtml_galleryimage</action>
+		  </galleryimage>
+		</children>
+	  </galleryimage>
+	</menu>
+	<acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<galleryimage translate="title" module="galleryimage">
+			  <title>Gallery image</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <galleryimage translate="title">
+			<title>Manage Gallery image</title>
+			<sort_order>0</sort_order>
+		  </galleryimage>
+			  </children>
+			</galleryimage>
+		  </children>
+		</admin>
+	  </resources>
+	</acl>
+	<layout>
+	  <updates>
+		<galleryimage>
+		  <file>galleryimage.xml</file>
+		</galleryimage>
+	  </updates>
+	</layout>
+  </adminhtml>
+</config> 

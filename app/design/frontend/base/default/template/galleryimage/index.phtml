@@ -1,0 +1,166 @@
+<?php   $currentUrl1 = Mage::helper('core/url')->getCurrentUrl(); ?>
+<?php $str = '?';
+$currentUrl = substr($currentUrl1,0,strrpos($currentUrl1,'?')); 
+?>
+<?php    $gallery_status=$this->getGalleryimageEnabled();   ?>
+<?php    $gallery_Paggingstar=$this->getGalleryimagePaggingstart();   ?>
+<?php    $gallery_Rowitem=$this->getGalleryimageRowitem(); ?>
+ 
+
+
+<?php if($gallery_status==1){ ?>
+
+
+<?php $cssurl =  str_replace('index.php/','',$this->getUrl());?>
+<script src="<?php echo $cssurl.'skin/frontend/base/default/galleryimage/js/jquery-1.2.6.noConflict.min.js'; ?>" type="text/javascript" ></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $cssurl.'skin/frontend/base/default/galleryimage/css/galleryimage.css'; ?>" media="all">
+<script type="text/javascript">
+jQuery.noConflict();
+function applyto(id) {
+var c= '#mks'+id
+jQuery(c).fadeIn(1000);
+}
+
+function applytoprev(x,y) {
+jQuery('#mks'+x).hide();
+jQuery('#mks'+y).show();
+}
+
+function applytonext(x,y) {
+jQuery('#mks'+x).hide();
+jQuery('#mks'+y).show();
+}
+</script>
+
+  
+<?php
+$connection = Mage::getSingleton('core/resource')->getConnection('core_write');
+$sql = $connection->query("select * from evincegalleryimage");
+$nr = $connection->fetchOne( 'SELECT COUNT(*) AS count FROM evincegalleryimage' );
+
+if (isset($_GET['pn'])) {
+    $pn = preg_replace('#[^0-9]#i', '', $_GET['pn']); 
+} else { 
+    $pn = 1;
+}
+
+$itemsPerPage = $gallery_Paggingstar;
+
+$lastPage = ceil($nr / $itemsPerPage);
+
+if ($pn < 1) { 
+    $pn = 1; 
+} else if ($pn > $lastPage) { 
+   $pn = $lastPage; 
+}
+$centerPages = "";
+$sub1 = $pn - 1;
+$sub2 = $pn - 2;
+$add1 = $pn + 1;
+$add2 = $pn + 2;
+if ($pn == 1) {
+    $centerPages .= '&nbsp; <span class="pagNumActive">' . $pn . '</span> &nbsp;';
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $add1 . '">' . $add1 . '</a> &nbsp;';
+} else if ($pn == $lastPage) {
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $sub1 . '">' . $sub1 . '</a> &nbsp;';
+    $centerPages .= '&nbsp; <span class="pagNumActive">' . $pn . '</span> &nbsp;';
+} else if ($pn > 2 && $pn < ($lastPage - 1)) {
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $sub2 . '">' . $sub2 . '</a> &nbsp;';
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $sub1 . '">' . $sub1 . '</a> &nbsp;';
+    $centerPages .= '&nbsp; <span class="pagNumActive">' . $pn . '</span> &nbsp;';
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $add1 . '">' . $add1 . '</a> &nbsp;';
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $add2 . '">' . $add2 . '</a> &nbsp;';
+} else if ($pn > 1 && $pn < $lastPage) {
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $sub1 . '">' . $sub1 . '</a> &nbsp;';
+    $centerPages .= '&nbsp; <span class="pagNumActive">' . $pn . '</span> &nbsp;';
+    $centerPages .= '&nbsp; <a href="' . $currentUrl . '?pn=' . $add1 . '">' . $add1 . '</a> &nbsp;';
+}
+$limit = 'LIMIT ' .($pn - 1) * $itemsPerPage .',' .$itemsPerPage;
+$sql2 = $connection->query("select * from evincegalleryimage ORDER BY id ASC $limit");
+
+$paginationDisplay = ""; if ($lastPage != "1"){
+    $paginationDisplay .= 'Page <strong>' . $pn . '</strong> of ' . $lastPage. '&nbsp;  &nbsp;  &nbsp; ';
+    if ($pn != 1) {
+        $previous = $pn - 1;
+        $paginationDisplay .=  '&nbsp;  <a href="' . $currentUrl . '?pn=' . $previous . '"> Back</a> ';
+    }
+    $paginationDisplay .= '<span class="paginationNumbers">' . $centerPages . '</span>';
+    if ($pn != $lastPage) {
+        $nextPage = $pn + 1;
+        $paginationDisplay .=  '&nbsp;  <a href="' . $currentUrl . '?pn=' . $nextPage . '"> Next</a> ';
+    }
+}
+?>
+
+ <div class="page-title">
+<h1>Gallery Images</h1>
+</div>
+
+<div class="pagination"><div class="amount amount--no-pages"><strong> <?php echo $nr; ?> Item(s)</strong> </div><?php echo $paginationDisplay; ?>
+
+  </div>
+<div class="table_div">
+<table >
+<tr>
+<?php 
+$outputList = '';
+$vz=1;
+$i = 0;
+$i = $i+1; 
+while($row1 = $sql2->fetch())
+{
+$id = $row1["id"];
+$firstname = $row1["url"];
+$country = $row1["image"];
+$media_url =  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA);
+$img_src = $media_url.$country; 
+?>
+<td>
+<div style="float:left;">
+<a href="javascript:void(0)"  onclick="applyto('<?php echo $vz; ?>')"><img src="<?php echo $img_src; ?>" style=""></a>
+</div>
+
+
+
+<div id="mks<?php echo $vz; ?>" style="display:none">
+<div id="popupform">
+<div class="blankdiv"></div>
+<div id="pclose" onclick="javascript:document.getElementById('<?php echo 'mks'.$vz; ?>').style.display='none'">X
+</div>
+<div class="applyform">
+<p id="contactArea">
+
+<center>
+<img src="<?php echo $img_src; ?>" height="400" width="400" />
+<div class="direction"><a class="direction_img" href="javascript:void(0)"  onclick="applytoprev('<?php echo $vz; ?>' ,'<?php echo $vz-1; ?>')"><img src="<?php echo $cssurl.'skin/frontend/base/default/galleryimage/images/left_1.png'; ?>" /></a>
+<a class="direction_img" href="javascript:void(0)"  onclick="applytonext('<?php echo $vz; ?>' ,'<?php echo $vz+1; ?>')"><img src="<?php echo $cssurl.'skin/frontend/base/default/galleryimage/images/right_1.png'; ?>" /></a></div>
+<div id="cboxCurrent">image <?php echo $vz; ?> of <?php echo $nr; ?></div>
+</center>
+
+</p>
+</div>
+</div>
+</div>
+</td>
+<?php
+if($vz%$gallery_Rowitem==0){
+echo '</tr><tr>';
+}
+ ?>
+<?php $vz++; }  
+?>
+
+</tr>
+</table>
+      </div>
+      <div class="pagination"><div class="amount amount--no-pages"><strong> <?php echo $nr; ?> Item(s)</strong> </div><?php echo $paginationDisplay; ?>
+  </div>
+
+
+
+<?php } else { ?>
+
+<p> There are no images in Gallery </p>
+
+<?php } ?>
+

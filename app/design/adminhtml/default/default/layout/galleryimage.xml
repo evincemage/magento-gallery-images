@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <galleryimage_adminhtml_galleryimage_index>
+	<reference name="content">
+	  <block type="galleryimage/adminhtml_galleryimage" name="galleryimage" />
+	</reference>
+  </galleryimage_adminhtml_galleryimage_index>
+</layout>

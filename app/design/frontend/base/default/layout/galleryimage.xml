@@ -1,0 +1,24 @@
+<?xml version="1.0"?>   
+<layout > 
+	<default>
+<reference name="footer_links">
+            <action method="addLink" translate="label title" ifconfig="evincegalleryimagesection/evincegalleryimagegroup/status" module="galleryimage">
+                <label>Gallery Images</label>
+                <url helper="galleryimage/getGalleryimagesUrl" />
+                <title>Gallery Images</title>
+                <prepare />
+                <urlParams/>
+                <position>120</position>
+            </action>
+        </reference>
+</default>  
+  <galleryimage_index_index>   
+    <reference name="root">   
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+    </reference>   
+    <reference name="content">   
+      <block type="galleryimage/index" name="galleryimage_index" template="galleryimage/index.phtml"/>   
+    </reference>   
+  </galleryimage_index_index>   
+</layout>   
+	
